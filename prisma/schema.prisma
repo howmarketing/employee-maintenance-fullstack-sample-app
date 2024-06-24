@@ -1,0 +1,56 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "sqlite"
+    url      = env("DATABASE_URL")
+}
+
+// npx prisma migrate dev
+
+model Department {
+    id                        Int                         @id @default(autoincrement())
+    key                       String                      @unique
+    label                     String
+    Employee                  Employee[]
+    EmployeeDepartmentHistory EmployeeDepartmentHistory[]
+    createdAt                 DateTime                    @default(now())
+    updatedAt                 DateTime                    @default(now())
+
+    // @@map("departments")
+}
+
+model Employee {
+    id                        Int                         @id @default(autoincrement())
+    publicId                  String                      @unique @default(uuid())
+    firstName                 String
+    lastName                  String
+    hireDate                  DateTime?                   @default(now())
+    isActive                  Boolean
+    department                Department?                 @relation(fields: [departmentKey], references: [key])
+    departmentKey             String?
+    phone                     String
+    address                   String
+    EmployeeDepartmentHistory EmployeeDepartmentHistory[]
+    createdAt                 DateTime                    @default(now())
+    updatedAt                 DateTime                    @default(now())
+
+    // @@map("employees")
+}
+
+model EmployeeDepartmentHistory {
+    id              Int        @id @default(autoincrement())
+    employee        Employee   @relation(fields: [employeeId], references: [id])
+    employeeId      Int
+    department      Department @relation(fields: [departmentKey], references: [key])
+    departmentKey   String
+    departmentLabel String     @default("")
+    createdAt       DateTime   @default(now())
+    updatedAt       DateTime   @default(now())
+
+    // @@map("employee_department_history")
+}
