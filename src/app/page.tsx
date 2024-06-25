@@ -9,7 +9,6 @@ export default async function Home() {
 		next: { tags: ['get-all-employees'] }
 	}).then( d => d.json());
 
-	console.log('getAllEmployeesResponse: ', getAllEmployeesResponse)
 	return (
 		<div className="col-span-12 col-start-1 grid grid-cols-12 p-8">
 			{!getAllEmployeesResponse.success && <h1>Error: {getAllEmployeesResponse.message}</h1>}
