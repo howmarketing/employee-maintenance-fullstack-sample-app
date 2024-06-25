@@ -5,7 +5,7 @@ import { NextRequest } from "next/server";
 import { PrismaClient, Department, Employee, EmployeeDepartmentHistory } from "@prisma/client";
 const prisma = new PrismaClient();
 
-export interface GetEmployeeResponse {
+export interface GetEmployeeByIdResponse {
 	success: boolean;
 	message: string;
 	data: {
@@ -17,7 +17,7 @@ export interface GetEmployeeResponse {
 }
 
 export async function GET(_request: NextRequest, context: Readonly<{params: {publicId: string}}>) {
-	const response: GetEmployeeResponse = { 
+	const response: GetEmployeeByIdResponse = { 
 		success: false, 
 		message: "", 
 		data: {
