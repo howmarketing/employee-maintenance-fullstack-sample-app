@@ -16,7 +16,7 @@ export interface GetEmployeeResponse {
 	data: Array<IEmployee>
 }
 
-export async function GET(_request: NextRequest, _context: any): Promise<GetEmployeeResponse> {
+export async function GET(_request: NextRequest) {
 	const response: GetEmployeeResponse = { 
 		success: false, 
 		message: "", 
