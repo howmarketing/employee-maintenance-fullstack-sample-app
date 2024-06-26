@@ -9,6 +9,5 @@ export async function getEmployeeByIdAction(_current: any, publicId: string): Pr
 		next: { tags: ['get-employee-by-id'] }
 	})
 		.then(d => d.json());
-	console.log(`getEmployeeByIdAction: `, employeeById);
 	return employeeById;
 }

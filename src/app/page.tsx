@@ -4,7 +4,7 @@ import { EmployeeCard } from "@/components/employee-card/employee-card";
 import { GetEmployeeResponse } from "./api/get-all-employees/route";
 
 export default async function Home() {
-	const url = `${process.env?.BASE_UEL || "http://localhost:3000"}/api/get-all-employees`;
+	const url = `${process.env?.BASE_URL || "http://localhost:3000"}/api/get-all-employees`;
 	const getAllEmployeesResponse: GetEmployeeResponse = await fetch(url, {
 		next: { tags: ['get-all-employees'] }
 	}).then( d => d.json());

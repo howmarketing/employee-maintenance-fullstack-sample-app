@@ -1,57 +1,62 @@
-'use server'
+'use client'
 
+import updateEmployeeDepartmentAction from "@/actions/employee/updateEmployeeDepartmentAction";
 import { GetAllDepartmentsResponse } from "@/app/api/get-all-departments/route";
-import { FormButton } from "@/components/update-employee-department-form/form-button";
+import { UpdateEmployeeDepartmentResponse } from "@/app/api/update-employee-department/route";
 import { revalidateTag } from "next/cache";
+import { useActionState, useEffect, useState } from "react";
 
 
-export const UpdateEmployeeDepartmentForm = async ({ publicId, currentDepartmentKey }: {publicId: string; currentDepartmentKey: string; }) => {
+export const UpdateEmployeeDepartmentForm = ({ publicId, currentDepartmentKey }: { publicId: string; currentDepartmentKey: string; }) => {
 
-	const url = `${process.env?.BASE_UEL || "http://localhost:3000"}/api/get-all-departments`;
-	const getAllDepartments: GetAllDepartmentsResponse = await fetch(url, {
-		next: { tags: ['get-all-departments'] }
-	}).then(d => d.json());
+	const [allDepartmentsResponse, setAllDepartmentsResponse] = useState<GetAllDepartmentsResponse>({
+		success: false,
+		message: "Loading departments...",
+		data: []
+	});
+	const [departmentKey, setDepartmentKey] = useState<string>(currentDepartmentKey);
+	const [updateEmployeeDepartmentResponse, dispatchUpdateEmployeeDepartmentAction, isPendingUpdateEmployeeDepartment] = useActionState(updateEmployeeDepartmentAction, {} as UpdateEmployeeDepartmentResponse)
 
+	useEffect(() => {
+		(async () => {
+			const url = `${process?.env?.BASE_URL || "http://localhost:3000"}/api/get-all-departments`;
+			const getAllDepartmentsResponse: GetAllDepartmentsResponse = await fetch(url, {
+				next: { tags: ['get-all-departments'] }
+			}).then(d => d.json());
+			setAllDepartmentsResponse(getAllDepartmentsResponse)
+		})()
+	}, [])
 
-	const handleSubmit = async (formData: FormData) => {
-		'use server'
-		const publicId = formData.get('publicId');
-		const departmentKey = formData.get('departmentKey');
-		if (!publicId || !departmentKey) {
-			return;
+	useEffect(() => {
+		if(updateEmployeeDepartmentResponse?.data?.employee?.department?.key) {
+			setDepartmentKey(updateEmployeeDepartmentResponse?.data?.employee?.department?.key)
 		}
-		const url = `${process.env?.BASE_UEL || "http://localhost:3000"}/api/update-employee-department`;
-		const updateEmployeeDapartmentResponse = await fetch(url, {
-			method: 'PATCH',
-			body: JSON.stringify({
-				publicId,
-				departmentKey: departmentKey
-			})
-		}).then(d => d.json());
-		revalidateTag('get-employee-by-id')
-		// revalidateTag('get-all-departments')
-		console.log('updateEmployeeDapartmentResponse: ', updateEmployeeDapartmentResponse);
-	}
+	}, [isPendingUpdateEmployeeDepartment, updateEmployeeDepartmentResponse])
 
 	return (
 		<>
-			{!getAllDepartments.success && (
+			{!allDepartmentsResponse.success && (
 				<div className="flex flex-col gap-2">
-					<h1>Error: {getAllDepartments.message}</h1>
+					<h1>{allDepartmentsResponse.message}</h1>
 				</div>
 			)}
-			{getAllDepartments.success && (
-				<form className="mt-2 col-span-12 flex flex-row justify-center items-center gap-2" action={handleSubmit}>
-					<input type="hidden" name="publicId" value={publicId} />
-					<select name="departmentKey" className="bg-gray-600 p-2 rounded-md text-white shadow-md">
-						<option value="">Select Department</option>
-						{getAllDepartments.data.map((department, i) => (
-							<option selected={currentDepartmentKey === department.key} key={department.id} value={department.key}>{department.label}</option>
-						))}
-					</select>
-					<FormButton />
-				</form>
-			)}
+			<form className="mt-2 col-span-12 flex flex-row justify-center items-center gap-2" action={dispatchUpdateEmployeeDepartmentAction} >
+				<input type="hidden" name="publicId" value={publicId} />
+				<select onChange={(e) => setDepartmentKey(e.target.value)} value={departmentKey} name="departmentKey" className="bg-gray-600 p-2 rounded-md text-white shadow-md">
+					{allDepartmentsResponse.data.map((department, i) => (
+						<option key={department.id} value={department.key}>{department.label}</option>
+					))}
+				</select>
+				<button className="rounded bg-blue-500 py-2 px-4 text-white hover:bg-blue-600 focus:bg-blue-400 disabled:bg-gray-300" disabled={isPendingUpdateEmployeeDepartment}>
+					{isPendingUpdateEmployeeDepartment ? 'Saving...' : 'Update'}
+				</button>
+				{!updateEmployeeDepartmentResponse.success && (
+					<div className="flex flex-col gap-2">
+						<h1>{updateEmployeeDepartmentResponse.message}</h1>
+					</div>
+				)}
+			</form>
+
 		</>
 	)
 }

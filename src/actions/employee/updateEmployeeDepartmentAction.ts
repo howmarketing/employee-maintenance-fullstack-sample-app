@@ -1,12 +1,17 @@
 'use server';
 
 import { UpdateEmployeeDepartmentRequest, UpdateEmployeeDepartmentResponse } from "@/app/api/update-employee-department/route";
+import { revalidateTag } from "next/cache";
 
 export default async function updateEmployeeDepartmentAction(
 	_state: UpdateEmployeeDepartmentResponse,
-	payload: UpdateEmployeeDepartmentRequest
-  ): Promise<UpdateEmployeeDepartmentResponse> {
+	formData: FormData
+): Promise<UpdateEmployeeDepartmentResponse> {
 
+	const payload: UpdateEmployeeDepartmentRequest = {
+		publicId: formData.get("publicId") as string,
+		departmentKey: formData.get("departmentKey") as string
+	}
 	// http://localhost:3000/api/update-employee-department
 	const url = `${process.env?.BASE_URL || "http://localhost:3000"}/api/update-employee-department`;
 	const response = await fetch(url, {
@@ -17,6 +22,7 @@ export default async function updateEmployeeDepartmentAction(
 		body: JSON.stringify(payload),
 	})
 		.then(d => d.json());
-	console.log(`updateEmployeeDepartmentAction: `, response);
+	revalidateTag('get-employee-by-id')
+	revalidateTag('get-all-departments')
 	return response
 }
