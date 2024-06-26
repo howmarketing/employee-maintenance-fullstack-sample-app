@@ -21,7 +21,7 @@ export const EmployeeCard = ({ employeeData }: Readonly<{ employeeData: GetEmplo
 			</div>
 			<div className="col-span-2 bg-white/10 flex flex-row flex-wrap justify-center items-center">
 				<div className="flex flex-col flex-wrap justify-center items-center">
-					<Link href="href">
+					<Link href={`/employee-details/${employeeData.publicId}`}>
 						<button className="bg-yellow-400 rounded-xl p-2">
 							View details
 						</button>

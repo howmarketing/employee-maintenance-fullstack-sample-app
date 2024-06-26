@@ -21,7 +21,6 @@ export async function PATCH(request: NextRequest, context: any) {
 	const requiredFields: UpdateEmployeeRequiredFields = ['publicId', 'isActive'];
 	
 	const body = await request.json()
-	body.hireDate = new Date(body.hireDate as unknown as string);
 	const missingFields = requiredFields.filter((field) => !(field in body))
 	
 	if (missingFields.length > 0 ) {

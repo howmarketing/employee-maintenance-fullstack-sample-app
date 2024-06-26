@@ -12,7 +12,6 @@ export async function getAllEmployeesAction(): Promise<Array<IGetAllEmployessRes
 		next: {tags: ['get-all-employees']}
 	})
 		.then(d => d.json());
-	console.log(`getAllEmployessAction: `, employees)
 	return employees
 }
 
