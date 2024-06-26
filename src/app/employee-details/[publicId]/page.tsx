@@ -21,14 +21,13 @@ export default async function Page({ params: { publicId } }: EmployeeDetailsProp
 			publicId: formData.get('publicId'),
 			isActive: isActive === 'true' ? true : false
 		}
-		const updateEmployeeActiveStatus: UpdateEmployeeResponse = await fetch('http://localhost:3000/api/update-employee-activate-status', {
+		const _updateEmployeeActiveStatus: UpdateEmployeeResponse = await fetch('http://localhost:3000/api/update-employee-activate-status', {
 			method: 'PATCH',
 			headers: {
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify(payload)
 		}).then(d => d.json());
-		console.log('updateEmployeeActiveStatus: ', updateEmployeeActiveStatus);
 		revalidateTag('get-employee-by-id')
 	}
 
