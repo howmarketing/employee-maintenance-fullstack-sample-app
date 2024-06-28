@@ -20,7 +20,7 @@ export async function PUT(request: NextRequest, context: any) {
 	const response: UpdateEmployeeResponse = { success: false, message: "", data: {} as UpdateEmployeeDAO }
 	const requiredFields: UpdateEmployeeRequiredFields = ['publicId', 'firstName','lastName','address','hireDate','isActive','phone','departmentKey'];
 	
-	const body = await request.json()
+	const body: UpdateEmployeeDAO = await request.json()
 	body.hireDate = new Date(body.hireDate as unknown as string);
 	const missingFields = requiredFields.filter((field) => !(field in body))
 	
@@ -65,10 +65,41 @@ export async function PUT(request: NextRequest, context: any) {
 				departmentKey: body.departmentKey
 			},
 			include: {
-				department: true
+				department: true,
+				EmployeeDepartmentHistory: true
 			}
 		})
-       
+       if (!updatedEmployee) {
+			response.message = "Something went wrong";
+			return new Response(JSON.stringify(response), {
+				status: 500,
+				headers: {
+					"Content-Type": "application/json",
+				},
+				statusText: "Internal Server Error",
+			});
+		}
+		if (null !== body.departmentKey && (employee.departmentKey!== body.departmentKey)) {
+			const employeeDepartmentHistory = await prisma.employeeDepartmentHistory.create({
+				data: {
+					employeeId: updatedEmployee.id,
+					departmentKey: body.departmentKey,
+					departmentLabel: updatedEmployee.department?.label || "",
+				}
+			})
+
+			if (!employeeDepartmentHistory) {
+				response.message = "Something went wrong";
+				return new Response(JSON.stringify(response), {
+					status: 500,
+					headers: {
+						"Content-Type": "application/json",
+					},
+					statusText: "Internal Server Error",
+				});
+			}
+			updatedEmployee.EmployeeDepartmentHistory.push(employeeDepartmentHistory);
+		}
 
 		response.success = true;
 		response.message = "Success";
