@@ -4,24 +4,25 @@ import { NextRequest } from "next/server";
 import { PrismaClient, Department, Employee } from "@prisma/client";
 const prisma = new PrismaClient();
 
-export interface UpdateEmployeeDAO extends Employee {
+export interface CreateEmployeeDAO extends Employee {
 	department: Department | null
 }
 
-export interface UpdateEmployeeResponse {
+export type CreateEmployeeRequestDAO = Omit<Omit<Omit<Omit<Omit<CreateEmployeeDAO, 'department'>, 'updatedAt'>, 'createdAt'>, 'publicId'>, 'id'>;
+
+export interface CreateEmployeeResponse {
 	success: boolean;
 	message: string;
-	data: UpdateEmployeeDAO;
+	data: CreateEmployeeDAO;
 }
 
-export type UpdateEmployeeRequiredFields = (keyof Omit<UpdateEmployeeDAO, 'id'>)[]
+export type UpdateEmployeeRequiredFields = (keyof CreateEmployeeRequestDAO)[]
 
-export async function PUT(request: NextRequest, context: any) {
-	const response: UpdateEmployeeResponse = { success: false, message: "", data: {} as UpdateEmployeeDAO }
-	const requiredFields: UpdateEmployeeRequiredFields = ['publicId', 'firstName','lastName','address','hireDate','isActive','phone','departmentKey'];
+export async function POST(request: NextRequest, context: any) {
+	const response: CreateEmployeeResponse = { success: false, message: "", data: {} as CreateEmployeeDAO }
+	const requiredFields: UpdateEmployeeRequiredFields = ["firstName", "lastName", "hireDate", "isActive", "departmentKey", "phone", "address"];
 	
-	const body: UpdateEmployeeDAO = await request.json()
-	body.hireDate = new Date(body.hireDate as unknown as string);
+	const body:CreateEmployeeRequestDAO = await request.json()
 	const missingFields = requiredFields.filter((field) => !(field in body))
 	
 	if (missingFields.length > 0 ) {
@@ -36,40 +37,24 @@ export async function PUT(request: NextRequest, context: any) {
 	}
 	
 	try {
-		const employee = await prisma.employee.findUnique({
-			where: {
-				publicId: body.publicId
-			}
-		});
-		if (!employee) {
-			response.message = `Employee not founded by the public id ${body.publicId}`;
-            return new Response(JSON.stringify(response), {
-                status: 404,
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                statusText: "Not Found",
-            });
-        }
-		const updatedEmployee = await prisma.employee.update({
-			where: {
-				publicId: body.publicId
-			},
+		
+		const createdEmployee = await prisma.employee.create({
 			data: {
 				firstName: body.firstName,
 				lastName: body.lastName,
-				address: body.address,
 				hireDate: body.hireDate,
 				isActive: body.isActive,
+				departmentKey: body.departmentKey,
 				phone: body.phone,
-				departmentKey: body.departmentKey
+				address: body.address
 			},
 			include: {
 				department: true,
 				EmployeeDepartmentHistory: true
 			}
 		})
-       if (!updatedEmployee) {
+       
+		if (!createdEmployee) {
 			response.message = "Something went wrong";
 			return new Response(JSON.stringify(response), {
 				status: 500,
@@ -79,12 +64,13 @@ export async function PUT(request: NextRequest, context: any) {
 				statusText: "Internal Server Error",
 			});
 		}
-		if (null !== body.departmentKey && (employee.departmentKey!== body.departmentKey)) {
+
+		if (body.departmentKey) {
 			const employeeDepartmentHistory = await prisma.employeeDepartmentHistory.create({
 				data: {
-					employeeId: updatedEmployee.id,
+					employeeId: createdEmployee.id,
 					departmentKey: body.departmentKey,
-					departmentLabel: updatedEmployee.department?.label || "",
+					departmentLabel: createdEmployee.department?.label || "",
 				}
 			})
 
@@ -98,12 +84,12 @@ export async function PUT(request: NextRequest, context: any) {
 					statusText: "Internal Server Error",
 				});
 			}
-			updatedEmployee.EmployeeDepartmentHistory.push(employeeDepartmentHistory);
+			createdEmployee.EmployeeDepartmentHistory.push(employeeDepartmentHistory);
 		}
 
 		response.success = true;
 		response.message = "Success";
-		response.data = updatedEmployee;
+		response.data = createdEmployee;
 
         return new Response(JSON.stringify(response), {
             status: 200,
