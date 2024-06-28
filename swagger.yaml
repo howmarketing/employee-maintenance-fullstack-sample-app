@@ -1,0 +1,194 @@
+openapi: 3.0.3
+info:
+  title: number8
+  description: ''
+  version: 1.0.0
+  contact: {}
+servers:
+  - url: http://localhost:3000/api
+paths:
+  /get-all-employees:
+    get:
+      tags:
+        - employee
+      summary: /api/get-all-employees
+      description: /api/get-all-employees
+      operationId: apiGetAllEmployees
+      responses:
+        '200':
+          description: ''
+  /get-employee-by-id/b5e7470e-2554-47f8-a111-37f0dbf1fe1d:
+    get:
+      tags:
+        - employee
+      summary: /api/get-employee-by-id/:publicId
+      description: /api/get-employee-by-id/:publicId
+      operationId: apiGetEmployeeByIdPublicid
+      responses:
+        '200':
+          description: ''
+  /create-employee:
+    post:
+      tags:
+        - employee
+      summary: api/create-employee
+      description: api/create-employee
+      operationId: apiCreateEmployee
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                address:
+                  type: string
+                  example: Zizi big House - Cond. Recanto di Veneza, Nova Veneza - GO
+                departmentKey:
+                  type: string
+                  example: it
+                firstName:
+                  type: string
+                  example: Employee
+                hireDate:
+                  type: string
+                  example: '2024-07-07T07:07:07.000Z'
+                isActive:
+                  type: boolean
+                  example: true
+                lastName:
+                  type: string
+                  example: Name
+                phone:
+                  type: string
+                  example: +55 62 9 9322-3016
+            examples:
+              api/create-employee:
+                value:
+                  address: Zizi big House - Cond. Recanto di Veneza, Nova Veneza - GO
+                  departmentKey: it
+                  firstName: Employee
+                  hireDate: '2024-07-07T07:07:07.000Z'
+                  isActive: true
+                  lastName: Name
+                  phone: +55 62 9 9322-3016
+      responses:
+        '200':
+          description: ''
+  /update-employee:
+    put:
+      tags:
+        - employee
+      summary: /api/update-employee
+      description: /api/update-employee
+      operationId: apiUpdateEmployee
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                address:
+                  type: string
+                  example: R. C-181, 790 QD 455 LT 1/26
+                departmentKey:
+                  type: string
+                  example: it
+                firstName:
+                  type: string
+                  example: Gabriel
+                hireDate:
+                  type: string
+                  example: '2024-07-03T17:51:56.000Z'
+                isActive:
+                  type: boolean
+                  example: false
+                lastName:
+                  type: string
+                  example: Ariza Rizzo
+                phone:
+                  type: string
+                  example: +55 62 9 9277-6060
+                publicId:
+                  type: string
+                  example: b5e7470e-2554-47f8-a111-37f0dbf1fe1d
+            examples:
+              /api/update-employee:
+                value:
+                  address: R. C-181, 790 QD 455 LT 1/26
+                  departmentKey: it
+                  firstName: Gabriel
+                  hireDate: '2024-07-03T17:51:56.000Z'
+                  isActive: false
+                  lastName: Ariza Rizzo
+                  phone: +55 62 9 9277-6060
+                  publicId: b5e7470e-2554-47f8-a111-37f0dbf1fe1d
+      responses:
+        '200':
+          description: ''
+  /update-employee-activate-status:
+    patch:
+      tags:
+        - employee
+      summary: /api/update-employee-activate-status
+      description: /api/update-employee-activate-status
+      operationId: apiUpdateEmployeeActivateStatus
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                isActive:
+                  type: boolean
+                  example: false
+                publicId:
+                  type: string
+                  example: b5e7470e-2554-47f8-a111-37f0dbf1fe1d
+            examples:
+              /api/update-employee-activate-status:
+                value:
+                  isActive: false
+                  publicId: b5e7470e-2554-47f8-a111-37f0dbf1fe1d
+      responses:
+        '200':
+          description: ''
+  /update-employee-department:
+    patch:
+      tags:
+        - employee
+      summary: api/update-employee-department
+      description: api/update-employee-department
+      operationId: apiUpdateEmployeeDepartment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                departmentKey:
+                  type: string
+                  example: it
+                publicId:
+                  type: string
+                  example: b5e7470e-2554-47f8-a111-37f0dbf1fe1d
+            examples:
+              api/update-employee-department:
+                value:
+                  departmentKey: it
+                  publicId: b5e7470e-2554-47f8-a111-37f0dbf1fe1d
+      responses:
+        '200':
+          description: ''
+  /get-all-departments:
+    get:
+      tags:
+        - department
+      summary: /api/get-all-departments
+      description: /api/get-all-departments
+      operationId: apiGetAllDepartments
+      responses:
+        '200':
+          description: ''
+tags:
+  - name: employee
+  - name: department
