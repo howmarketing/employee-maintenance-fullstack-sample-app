@@ -83,7 +83,7 @@ export const UpdateEmployeeDepartmentForm = ({ publicId, currentDepartmentKey }:
 					<form className="mt-2 col-span-12 grid grid-cols-12 flex-row justify-center items-center gap-2" action={dispatchUpdateEmployeeDepartmentAction} >
 						<div className="flex-row flex-wrap gap-2 col-span-12 flex">
 							<input type="hidden" name="publicId" value={publicId} />
-							<select onChange={(e) => { setDepartmentKey(e.target.value) }} value={departmentKey} name="departmentKey" className="bg-gray-600 p-2 rounded-md text-white shadow-md">
+							<select title="Select an department to update the employee department" onChange={(e) => { setDepartmentKey(e.target.value) }} value={departmentKey} name="departmentKey" className="bg-gray-600 p-2 rounded-md text-white shadow-md">
 								<option value={(updateEmployeeDepartmentResponse?.data?.employee?.departmentKey || currentDepartmentKey)}>{departmentLabel}</option>
 								{allDepartmentsResponse.data.map((department, i) => {
 									if ((updateEmployeeDepartmentResponse?.data?.employee?.departmentKey || currentDepartmentKey) === department.key) {
