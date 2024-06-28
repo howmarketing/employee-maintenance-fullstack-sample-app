@@ -1,5 +1,23 @@
 # assessment-nextjs
 
+# STARTING POINT
+
+```bash
+
+npm i --force
+
+npm i --legacy-peer-deps
+
+npm i -D jest @types/jest @testing-library/jest-dom ts-jest @testing-library/user-event jest-environment-jsdom @testing-library/react --force
+
+npm run build
+
+npm run test
+
+npm run start
+
+```
+
 ## README
 
 A simple web application for managing employee records, built as a fullstack assessment to demonstrate proficiency in software architecture, code quality, design patterns, and best practices.
