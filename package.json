@@ -7,14 +7,15 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-	"test": "jest --watchAll",
-	"test:ci": "jest --ci --watchAll"
+    "test": "jest --watchAll",
+    "test:ci": "jest --ci --watchAll"
   },
   "dependencies": {
     "@prisma/client": "^5.15.1",
     "next": "14.3.0-canary.59",
     "react": "19.0.0-beta-4508873393-20240430",
-    "react-dom": "19.0.0-beta-4508873393-20240430"
+    "react-dom": "19.0.0-beta-4508873393-20240430",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.4.6",
