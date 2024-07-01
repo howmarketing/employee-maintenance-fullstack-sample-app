@@ -11,7 +11,7 @@
     "test:ci": "jest --ci --watchAll"
   },
   "dependencies": {
-    "@prisma/client": "^5.15.1",
+    "@prisma/client": "^5.16.1",
     "next": "14.3.0-canary.59",
     "react": "19.0.0-beta-4508873393-20240430",
     "react-dom": "19.0.0-beta-4508873393-20240430",

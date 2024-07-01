@@ -19,7 +19,7 @@ model Department {
     Employee                  Employee[]
     EmployeeDepartmentHistory EmployeeDepartmentHistory[]
     createdAt                 DateTime                    @default(now())
-    updatedAt                 DateTime                    @default(now())
+    updatedAt                 DateTime                    @default(now()) @updatedAt
 
     // @@map("departments")
 }
@@ -37,7 +37,7 @@ model Employee {
     address                   String
     EmployeeDepartmentHistory EmployeeDepartmentHistory[]
     createdAt                 DateTime                    @default(now())
-    updatedAt                 DateTime                    @default(now())
+    updatedAt                 DateTime                    @default(now()) @updatedAt
 
     // @@map("employees")
 }
@@ -50,7 +50,7 @@ model EmployeeDepartmentHistory {
     departmentKey   String
     departmentLabel String     @default("")
     createdAt       DateTime   @default(now())
-    updatedAt       DateTime   @default(now())
+    updatedAt       DateTime   @default(now()) @updatedAt
 
     // @@map("employee_department_history")
 }
