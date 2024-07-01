@@ -37,6 +37,7 @@ export async function GET(_request: NextRequest, _context: any) {
 				status: 404,
 				headers: {
 					"Content-Type": "application/json",
+					"Access-Control-Allow-Origin": "*",
 				},
 				statusText: "Not Found",
 			})
@@ -50,6 +51,7 @@ export async function GET(_request: NextRequest, _context: any) {
 			status: 200,
 			headers: {
 				"Content-Type": "application/json",
+				"Access-Control-Allow-Origin": "*",
 			},
 		});
 	} catch (e: any) {
@@ -61,6 +63,7 @@ export async function GET(_request: NextRequest, _context: any) {
 			status: 500,
 			headers: {
 				"Content-Type": "application/json",
+				"Access-Control-Allow-Origin": "*",
 			},
 			statusText: "Internal Server Error",
 		})
