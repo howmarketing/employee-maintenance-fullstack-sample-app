@@ -127,12 +127,12 @@ export async function POST(request: NextRequest, context: any) {
 		response.data = createdEmployee;
 
 		return new Response(JSON.stringify(response), {
-			status: 200,
+			status: 201,
 			headers: {
 				"Content-Type": "application/json",
 				"Access-Control-Allow-Origin": "*",
 			},
-			statusText: "OK",
+			statusText: "CREATED",
 		});
 	} catch (e: any) {
 		response.message = e?.message || "Something went wrong";
