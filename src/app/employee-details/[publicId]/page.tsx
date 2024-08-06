@@ -4,12 +4,16 @@ import { GetEmployeeByIdResponse } from "@/app/api/get-employee-by-id/[publicId]
 import { UpdateEmployeeResponse } from "@/app/api/update-employee-activate-status/route";
 import { UpdateEmployeeDepartmentForm } from "@/components/update-employee-department-form/update-employee-department-form";
 import { revalidateTag } from "next/cache";
+import { useEffect } from "react";
 
 export interface EmployeeDetailsProps { params: { publicId: string; } }
 
 export default async function Page({ params: { publicId } }: EmployeeDetailsProps) {
 
-	const url = `${process.env?.BASE_URL || "http://localhost:3000"}/api/get-employee-by-id/${publicId}`;
+	const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
+	
+	const url = `${BASE_URL}/api/get-employee-by-id/${publicId}`;
+	
 	const getEmployeeById: GetEmployeeByIdResponse = await fetch(url, {
 		next: { tags: ['get-employee-by-id'] }
 	}).then(d => d.json());
@@ -21,7 +25,7 @@ export default async function Page({ params: { publicId } }: EmployeeDetailsProp
 			publicId: formData.get('publicId'),
 			isActive: isActive === 'true' ? true : false
 		}
-		const _updateEmployeeActiveStatus: UpdateEmployeeResponse = await fetch('http://localhost:3000/api/update-employee-activate-status', {
+		const _updateEmployeeActiveStatus: UpdateEmployeeResponse = await fetch(`${BASE_URL}/api/update-employee-activate-status`, {
 			method: 'PATCH',
 			headers: {
 				'Content-Type': 'application/json',
@@ -31,10 +35,15 @@ export default async function Page({ params: { publicId } }: EmployeeDetailsProp
 		revalidateTag('get-employee-by-id')
 	}
 
+
 	return (
 		<div className="p-4 grid grid-cols-12 col-start-1 col-span-12">
 			<div className="p-8 grid grid-cols-12 col-span-12 flex-row flex-wrap justify-center items-center">
 				{!getEmployeeById.success && <h1 id="Error">Error: {getEmployeeById.message}</h1>}
+				<p>BASE_URL:</p>
+				<code>{BASE_URL}</code>
+				<p>FETCH URL:</p>
+				<code>{url}</code>
 			</div>
 			<section id="employee-data" className="rounded-md gap-2 flex-row flex-wrap justify-center items-stretch grid grid-cols-10 col-span-12 p-2 bg-purple-500/0">
 				<div className="rounded-md shadow-sm col-span-2 p-4 flex flex-row justify-center items-end bg-cyan-300" style={{ minHeight: '160px' }}>
