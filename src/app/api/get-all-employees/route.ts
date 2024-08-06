@@ -1,8 +1,9 @@
-'use server';
 import { NextRequest } from "next/server";
+import { PrismaClient, Department, Employee, EmployeeDepartmentHistory } from "@prisma/client";
 // [GET] /get-employee-all-employees/
 
-import { PrismaClient, Department, Employee, EmployeeDepartmentHistory } from "@prisma/client";
+export const dynamic = "force-dynamic";
+
 const prisma = new PrismaClient();
 
 export interface IEmployee extends Employee {
