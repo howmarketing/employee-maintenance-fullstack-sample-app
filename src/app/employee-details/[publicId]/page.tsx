@@ -35,19 +35,15 @@ export default async function Page({ params: { publicId } }: EmployeeDetailsProp
 		revalidateTag('get-employee-by-id')
 	}
 
-	useEffect(() => {
-		console.log('BASE_URL: ', BASE_URL);
-	}, []);
-	
-	useEffect(() => {
-		console.log('BASE_URL: ', BASE_URL);
-		console.log('Employee data: ', getEmployeeById)
-	}, [getEmployeeById, BASE_URL])
 
 	return (
 		<div className="p-4 grid grid-cols-12 col-start-1 col-span-12">
 			<div className="p-8 grid grid-cols-12 col-span-12 flex-row flex-wrap justify-center items-center">
 				{!getEmployeeById.success && <h1 id="Error">Error: {getEmployeeById.message}</h1>}
+				<p>BASE_URL:</p>
+				<code>{BASE_URL}</code>
+				<p>FETCH URL:</p>
+				<code>{url}</code>
 			</div>
 			<section id="employee-data" className="rounded-md gap-2 flex-row flex-wrap justify-center items-stretch grid grid-cols-10 col-span-12 p-2 bg-purple-500/0">
 				<div className="rounded-md shadow-sm col-span-2 p-4 flex flex-row justify-center items-end bg-cyan-300" style={{ minHeight: '160px' }}>
