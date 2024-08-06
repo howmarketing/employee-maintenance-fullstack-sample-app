@@ -1,0 +1,427 @@
+[
+	{
+		"employeeId": 1,
+		"departmentKey": "it",
+		"departmentLabel": "IT"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "po",
+		"departmentLabel": "PO"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "hr",
+		"departmentLabel": "HR"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "sm",
+		"departmentLabel": "SM"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "mg",
+		"departmentLabel": "MG"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "it",
+		"departmentLabel": "IT"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "mg",
+		"departmentLabel": "MG"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "it",
+		"departmentLabel": "IT"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "hr",
+		"departmentLabel": "HR"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "it",
+		"departmentLabel": "IT"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "it",
+		"departmentLabel": "IT"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "hr",
+		"departmentLabel": "HR"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "it",
+		"departmentLabel": "IT"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "hr",
+		"departmentLabel": "HR"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "it",
+		"departmentLabel": "IT"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "mg",
+		"departmentLabel": "Manager"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "hr",
+		"departmentLabel": "HR"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "sm",
+		"departmentLabel": "Scrum Master"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "mg",
+		"departmentLabel": "Manager"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "hr",
+		"departmentLabel": "HR"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "po",
+		"departmentLabel": "Product Owner"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "hr",
+		"departmentLabel": "HR"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "it",
+		"departmentLabel": "IT"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "hr",
+		"departmentLabel": "HR"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "mg",
+		"departmentLabel": "Manager"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "hr",
+		"departmentLabel": "HR"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "po",
+		"departmentLabel": "Product Owner"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "hr",
+		"departmentLabel": "HR"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "it",
+		"departmentLabel": "IT"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "hr",
+		"departmentLabel": "HR"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "po",
+		"departmentLabel": "Product Owner"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "hr",
+		"departmentLabel": "HR"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "sm",
+		"departmentLabel": "Scrum Master"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "it",
+		"departmentLabel": "IT"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "hr",
+		"departmentLabel": "HR"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "mg",
+		"departmentLabel": "Manager"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "hr",
+		"departmentLabel": "HR"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "sm",
+		"departmentLabel": "Scrum Master"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "it",
+		"departmentLabel": "IT"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "sm",
+		"departmentLabel": "Scrum Master"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "hr",
+		"departmentLabel": "HR"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "it",
+		"departmentLabel": "IT"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "po",
+		"departmentLabel": "Product Owner"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "sm",
+		"departmentLabel": "Scrum Master"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "it",
+		"departmentLabel": "IT"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "mg",
+		"departmentLabel": "Manager"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "hr",
+		"departmentLabel": "HR"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "it",
+		"departmentLabel": "IT"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "po",
+		"departmentLabel": "Product Owner"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "sm",
+		"departmentLabel": "Scrum Master"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "it",
+		"departmentLabel": "IT"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "po",
+		"departmentLabel": "Product Owner"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "it",
+		"departmentLabel": "IT"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "hr",
+		"departmentLabel": ""
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "po",
+		"departmentLabel": ""
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "it",
+		"departmentLabel": ""
+	},
+	{
+		"employeeId": 2,
+		"departmentKey": "hr",
+		"departmentLabel": ""
+	},
+	{
+		"employeeId": 3,
+		"departmentKey": "mg",
+		"departmentLabel": ""
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "hr",
+		"departmentLabel": "HR"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "sm",
+		"departmentLabel": "Scrum Master"
+	},
+	{
+		"employeeId": 2,
+		"departmentKey": "mg",
+		"departmentLabel": "Manager"
+	},
+	{
+		"employeeId": 4,
+		"departmentKey": "it",
+		"departmentLabel": ""
+	},
+	{
+		"employeeId": 5,
+		"departmentKey": "it",
+		"departmentLabel": ""
+	},
+	{
+		"employeeId": 6,
+		"departmentKey": "it",
+		"departmentLabel": "IT"
+	},
+	{
+		"employeeId": 7,
+		"departmentKey": "it",
+		"departmentLabel": "IT"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "it",
+		"departmentLabel": ""
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "hr",
+		"departmentLabel": ""
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "it",
+		"departmentLabel": "IT"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "po",
+		"departmentLabel": "Product Owner"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "it",
+		"departmentLabel": "IT"
+	},
+	{
+		"employeeId": 2,
+		"departmentKey": "it",
+		"departmentLabel": "IT"
+	},
+	{
+		"employeeId": 2,
+		"departmentKey": "mg",
+		"departmentLabel": "Manager"
+	},
+	{
+		"employeeId": 8,
+		"departmentKey": "sm",
+		"departmentLabel": "Scrum Master"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "po",
+		"departmentLabel": "Product Owner"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "sm",
+		"departmentLabel": "Scrum Master"
+	},
+	{
+		"employeeId": 9,
+		"departmentKey": "sm",
+		"departmentLabel": "Scrum Master"
+	},
+	{
+		"employeeId": 10,
+		"departmentKey": "sm",
+		"departmentLabel": "Scrum Master"
+	},
+	{
+		"employeeId": 11,
+		"departmentKey": "it",
+		"departmentLabel": "IT"
+	},
+	{
+		"employeeId": 12,
+		"departmentKey": "it",
+		"departmentLabel": "IT"
+	},
+	{
+		"employeeId": 13,
+		"departmentKey": "it",
+		"departmentLabel": "IT"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "po",
+		"departmentLabel": "Product Owner"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "mg",
+		"departmentLabel": "Manager"
+	},
+	{
+		"employeeId": 14,
+		"departmentKey": "it",
+		"departmentLabel": "IT"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "hr",
+		"departmentLabel": "HR"
+	},
+	{
+		"employeeId": 1,
+		"departmentKey": "sm",
+		"departmentLabel": "Scrum Master"
+	}
+]

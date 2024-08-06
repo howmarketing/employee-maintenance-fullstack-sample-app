@@ -1,7 +1,7 @@
-'use server';
-
 import { Department, PrismaClient } from "@prisma/client";
 import { NextRequest } from "next/server";
+
+export const dynamic = "force-dynamic";
 
 const prisma = new PrismaClient();
 
@@ -24,6 +24,9 @@ export async function GET(_request: NextRequest, _context: any) {
 				id: {
 					gte: 0
 				}
+			},
+			orderBy: {
+				id: "desc"
 			}
 		});
 
