@@ -4,12 +4,16 @@ import { GetEmployeeByIdResponse } from "@/app/api/get-employee-by-id/[publicId]
 import { UpdateEmployeeResponse } from "@/app/api/update-employee-activate-status/route";
 import { UpdateEmployeeDepartmentForm } from "@/components/update-employee-department-form/update-employee-department-form";
 import { revalidateTag } from "next/cache";
+import { useEffect } from "react";
 
 export interface EmployeeDetailsProps { params: { publicId: string; } }
 
 export default async function Page({ params: { publicId } }: EmployeeDetailsProps) {
 
-	const url = `${process.env?.BASE_URL || "http://localhost:3000"}/api/get-employee-by-id/${publicId}`;
+	const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
+	
+	const url = `${BASE_URL}/api/get-employee-by-id/${publicId}`;
+	
 	const getEmployeeById: GetEmployeeByIdResponse = await fetch(url, {
 		next: { tags: ['get-employee-by-id'] }
 	}).then(d => d.json());
@@ -21,7 +25,7 @@ export default async function Page({ params: { publicId } }: EmployeeDetailsProp
 			publicId: formData.get('publicId'),
 			isActive: isActive === 'true' ? true : false
 		}
-		const _updateEmployeeActiveStatus: UpdateEmployeeResponse = await fetch('http://localhost:3000/api/update-employee-activate-status', {
+		const _updateEmployeeActiveStatus: UpdateEmployeeResponse = await fetch(`${BASE_URL}/api/update-employee-activate-status`, {
 			method: 'PATCH',
 			headers: {
 				'Content-Type': 'application/json',
@@ -30,6 +34,15 @@ export default async function Page({ params: { publicId } }: EmployeeDetailsProp
 		}).then(d => d.json());
 		revalidateTag('get-employee-by-id')
 	}
+
+	useEffect(() => {
+		console.log('BASE_URL: ', BASE_URL);
+	}, []);
+	
+	useEffect(() => {
+		console.log('BASE_URL: ', BASE_URL);
+		console.log('Employee data: ', getEmployeeById)
+	}, [getEmployeeById, BASE_URL])
 
 	return (
 		<div className="p-4 grid grid-cols-12 col-start-1 col-span-12">
