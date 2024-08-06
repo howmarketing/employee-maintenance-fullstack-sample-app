@@ -6,8 +6,9 @@ generator client {
 }
 
 datasource db {
-    provider = "sqlite"
-    url      = env("DATABASE_URL")
+    provider  = "postgresql"
+    url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
+    directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
 // npx prisma migrate dev
@@ -18,39 +19,39 @@ model Department {
     label                     String
     Employee                  Employee[]
     EmployeeDepartmentHistory EmployeeDepartmentHistory[]
-    createdAt                 DateTime                    @default(now())
-    updatedAt                 DateTime                    @default(now()) @updatedAt
+    createdAt                 DateTime                    @default(now()) @map("created_at")
+    updatedAt                 DateTime                    @default(now()) @updatedAt @map("updated_at")
 
-    // @@map("departments")
+    @@map("departments")
 }
 
 model Employee {
     id                        Int                         @id @default(autoincrement())
-    publicId                  String                      @unique @default(uuid())
-    firstName                 String
-    lastName                  String
-    hireDate                  DateTime?                   @default(now())
-    isActive                  Boolean
+    publicId                  String                      @unique @default(uuid()) @map("public_id")
+    firstName                 String                      @map("first_name")
+    lastName                  String                      @map("last_name")
+    hireDate                  DateTime?                   @default(now()) @map("hire_date")
+    isActive                  Boolean                     @map("is_active")
     department                Department?                 @relation(fields: [departmentKey], references: [key])
-    departmentKey             String?
+    departmentKey             String?                     @map("department_key")
     phone                     String
     address                   String
     EmployeeDepartmentHistory EmployeeDepartmentHistory[]
-    createdAt                 DateTime                    @default(now())
-    updatedAt                 DateTime                    @default(now()) @updatedAt
+    createdAt                 DateTime                    @default(now()) @map("created_at")
+    updatedAt                 DateTime                    @default(now()) @updatedAt @map("updated_at")
 
-    // @@map("employees")
+    @@map("employees")
 }
 
 model EmployeeDepartmentHistory {
     id              Int        @id @default(autoincrement())
     employee        Employee   @relation(fields: [employeeId], references: [id])
-    employeeId      Int
+    employeeId      Int        @map("employee_id")
     department      Department @relation(fields: [departmentKey], references: [key])
-    departmentKey   String
-    departmentLabel String     @default("")
-    createdAt       DateTime   @default(now())
-    updatedAt       DateTime   @default(now()) @updatedAt
+    departmentKey   String     @map("department_key")
+    departmentLabel String     @default("") @map("department_label")
+    createdAt       DateTime   @default(now()) @map("created_at")
+    updatedAt       DateTime   @default(now()) @updatedAt @map("updated_at")
 
-    // @@map("employee_department_history")
+    @@map("employee_department_history")
 }

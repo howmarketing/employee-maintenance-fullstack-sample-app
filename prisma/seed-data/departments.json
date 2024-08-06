@@ -1,0 +1,26 @@
+[
+    {
+        "key": "mg",
+        "label": "Manager"
+    },
+    {
+        "key": "sm",
+        "label": "Scrum Master"
+    },
+    {
+        "key": "po",
+        "label": "Product Owner"
+    },
+    {
+        "key": "it",
+        "label": "IT"
+    },
+    {
+        "key": "hr",
+        "label": "HR"
+    },
+    {
+        "key": "ux_designer",
+        "label": "UX Designer"
+    }
+]
