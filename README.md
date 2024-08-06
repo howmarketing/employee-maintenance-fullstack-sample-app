@@ -1,6 +1,61 @@
-# assessment-nextjs
+## Simple Employee Maintenance Web Application
 
-# STARTING POINT
+### Screenshots
+
+![Screenshot](./public/home.png)
+
+![Screenshot](./public/employee-page.png)
+
+### Overview
+
+The Simple Employee Maintenance web application is designed to streamline the management of employee records and department assignments within an organization. This full-stack application provides essential CRUD operations for employees and departments, alongside a user-friendly interface to view and manage employee information.
+
+### Features
+
+1. **Database Management:**
+   - A robust database schema designed using Prisma ORM to store and manage employee and department data.
+   - Tables include Employees, Departments, and Employee Department History to track changes over time.
+
+2. **Web Service Endpoints:**
+   - **Employee Endpoints:**
+     - `GetAllEmployees`: Retrieve a list of all employees.
+     - `GetEmployeeById`: Fetch detailed information for a specific employee.
+     - `UpdateEmployee`: Modify the details of an existing employee.
+     - `DeleteEmployee`: Remove an employee from the system.
+   - **Department Endpoints:**
+     - `GetAllDepartments`: Retrieve a list of all departments.
+
+3. **Employee List Page:**
+   - A web page that displays a comprehensive list of employees, including their names, departments, hire dates, and avatars.
+   - Hire dates are displayed in a user-friendly format, indicating the duration of employment.
+   - Includes a "View Details" button for each employee to access more detailed information.
+
+### Technical Details
+
+1. **Prisma Schema Definition:**
+   - **Department Model:** Contains fields for department ID, unique key, label, and timestamps. It relates to multiple employees and department history records.
+   - **Employee Model:** Includes fields for employee ID, unique public ID, first and last names, hire date, department association, phone, address, and timestamps.
+   - **Employee Department History Model:** Tracks the history of employees' department assignments, with fields for employee ID, department key, department label, and timestamps.
+
+2. **Technologies Used:**
+   - **Backend:** Node.js, with server-side for backend RESTful APIs.
+   - **Frontend:** Next.js@14 with React.js@19 implemented the server actions.
+   - **Database:** Prisma ORM with SQLite for development database environment.
+   - **Other Tools:** Git for version control, GitHub for repository hosting, vercel for deployments.
+
+### Usage
+
+- **Database Setup:** Create the necessary tables and relationships using Prisma migrations.
+- **API Development:** Implement the required endpoints to interact with the employee and department data.
+- **UI Implementation:** Develop the Employee List page to display and manage employee records effectively.
+
+### Conclusion
+
+The Simple Employee Maintenance web application is a comprehensive solution for managing employee records and departmental assignments, providing an intuitive interface and robust backend to ensure efficient data handling and retrieval.
+
+---
+
+## STARTING POINT
 
 ```bash
 
@@ -39,7 +94,7 @@ A simple web application for managing employee records, built as a fullstack ass
 - Your code should compile and run with us doing a simple package restore and nothing more.
 
 **Submitting your code**
-- Go to [git.number8.com](https://git.number8.com) and register or login if you already have an account.
+- Go to [company-repo-management](https://git.company-repo-management.com) and register or login if you already have an account.
 - Create a repository to work on and do constant commits as you would normally do.
 - You have no time limit to complete the assessment.
 - Once you are ready, add a brief explanation of your solution and architecture to the README file and share your git repository URL with your recruiter.
