@@ -17,7 +17,7 @@ export interface CreateEmployeeResponse {
 	data: CreateEmployeeDAO;
 }
 
-export type UpdateEmployeeRequiredFields = (keyof CreateEmployeeRequestDAO)[]
+export type CreateEmployeeRequiredFields = (keyof CreateEmployeeRequestDAO)[]
 
 export async function POST(request: NextRequest, context: any) {
 	const response: CreateEmployeeResponse = { success: false, message: "", data: {} as CreateEmployeeDAO }
@@ -50,7 +50,7 @@ export async function POST(request: NextRequest, context: any) {
 		});
 	}
 
-	const requiredFields: UpdateEmployeeRequiredFields = ["firstName", "lastName", "hireDate", "isActive", "departmentKey", "phone", "address"];
+	const requiredFields: CreateEmployeeRequiredFields = ["firstName", "lastName", "hireDate", "isActive", "departmentKey", "phone", "address"];
 
 	const missingFields = requiredFields.filter((field) => !(field in body))
 

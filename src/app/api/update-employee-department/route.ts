@@ -1,9 +1,8 @@
-'use server';
-
 import { Department, Employee, EmployeeDepartmentHistory, PrismaClient } from '@prisma/client'
 
-const prisma = new PrismaClient();
+export const dynamic = "force-dynamic";
 
+const prisma = new PrismaClient();
 
 type UpdateEmployeeRequiredFields = ['publicId', 'departmentKey'];
 
@@ -57,7 +56,7 @@ export async function PATCH(request: Request) {
 	const body: UpdateEmployeeDepartmentRequest = await request.json();
 	const requiredFields: UpdateEmployeeRequiredFields = ['publicId', 'departmentKey'];
 	try {
-		
+
 		// check required fields
 		const missingFields = requiredFields.filter(field => !(field in body));
 		if (missingFields.length > 0) {
