@@ -3,6 +3,16 @@
 ## Overview
 This PR introduces the repository pattern and Data Transfer Objects (DTOs) to our employee management system. These changes aim to improve code organization, maintainability, and separation of concerns.
 
+## Tasks
+- [x] Add EmployeeRepository class with createEmployee method
+- [x] Create DTOs for Employee, Department, and API responses
+- [x] Refactor API routes to use repository and DTOs
+- [x] Update Prisma schema and migrations for employee and department models
+- [x] Implement error handling and logging in API routes
+- [x] Update seed data and seeding process
+- [x] Adjust employee details page to display department history
+- [x] Implement create department API route
+
 ## Key Changes
 
 ### 1. Employee Repository
