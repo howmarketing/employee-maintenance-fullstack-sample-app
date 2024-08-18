@@ -33,6 +33,184 @@ The Simple Employee Maintenance web application is designed to streamline the ma
 ### Technical Details
 
 1. **Prisma Schema Definition:**
+   The Prisma schema has been updated to include three main models: Department, Employee, and EmployeeDepartmentHistory. Here's a brief overview:
+
+   ```prisma:schema.prisma
+	// This is your Prisma schema file,
+	// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+	// Define the Prisma client generator
+	generator client {
+		provider = "prisma-client-js"
+	}
+
+	// Define the database connection
+	datasource db {
+		provider  = "postgresql"
+		url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
+		directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+	}
+
+	// Command to run migrations: npx prisma migrate dev
+
+	// Department model
+	model Department {
+		id                        Int                         @id @default(autoincrement())
+		key                       String                      @unique
+		label                     String
+		Employee                  Employee[]
+		EmployeeDepartmentHistory EmployeeDepartmentHistory[]
+		createdAt                 DateTime                    @default(now()) @map("created_at")
+		updatedAt                 DateTime                    @default(now()) @updatedAt @map("updated_at")
+
+		@@map("departments")
+	}
+
+	// Employee model
+	model Employee {
+		id                        Int                         @id @default(autoincrement())
+		publicId                  String                      @unique @default(uuid()) @map("public_id")
+		firstName                 String                      @map("first_name")
+		lastName                  String                      @map("last_name")
+		hireDate                  DateTime?                   @default(now()) @map("hire_date")
+		isActive                  Boolean                     @map("is_active")
+		department                Department?                 @relation(fields: [departmentKey], references: [key])
+		departmentKey             String?                     @map("department_key")
+		phone                     String
+		address                   String
+		EmployeeDepartmentHistory EmployeeDepartmentHistory[]
+		createdAt                 DateTime                    @default(now()) @map("created_at")
+		updatedAt                 DateTime                    @default(now()) @updatedAt @map("updated_at")
+
+		@@map("employees")
+	}
+
+	// EmployeeDepartmentHistory model
+	model EmployeeDepartmentHistory {
+		id              Int        @id @default(autoincrement())
+		employee        Employee   @relation(fields: [employeeId], references: [id])
+		employeeId      Int        @map("employee_id")
+		department      Department @relation(fields: [departmentKey], references: [key])
+		departmentKey   String     @map("department_key")
+		departmentLabel String     @default("") @map("department_label")
+		createdAt       DateTime   @default(now()) @map("created_at")
+		updatedAt       DateTime   @default(now()) @updatedAt @map("updated_at")
+
+		@@map("employee_department_history")
+	}
+   ```
+
+   - **Department Model:** Contains fields for department ID, unique key, label, and timestamps. It relates to multiple employees and department history records.
+   - **Employee Model:** Includes fields for employee ID, unique public ID, first and last names, hire date, department association, phone, address, and timestamps.
+   - **Employee Department History Model:** Tracks the history of employees' department assignments, with fields for employee ID, department key, department label, and timestamps.
+
+2. **Repository Pattern Implementation:**
+   We've implemented the repository pattern to abstract database operations. Here's an example of the EmployeeRepository:
+
+   ```typescript:src/repositories/employeeRepository.ts
+	import { PrismaClient } from "@prisma/client";
+	import { CreateEmployeeDTO, EmployeeDTO } from '@/dtos/employeeDTO';
+
+	export class EmployeeRepository {
+		constructor(private prisma: PrismaClient) { }
+
+		async createEmployee(data: CreateEmployeeDTO): Promise<EmployeeDTO> {
+			const createdEmployee = await this.prisma.employee.create({
+				data,
+				include: {
+					department: true,
+					EmployeeDepartmentHistory: true
+				}
+			});
+			if (data.departmentKey) {
+				await this.prisma.employeeDepartmentHistory.create({
+					data: {
+						employeeId: createdEmployee.id,
+						departmentKey: data.departmentKey,
+						departmentLabel: createdEmployee.department?.label || "",
+					}
+				});
+			}
+			return createdEmployee as EmployeeDTO;
+		}
+	}
+
+   ```
+
+   This repository centralizes database operations related to employees, improving code organization and maintainability.
+
+3. **API Routes Refactoring:**
+   API routes have been refactored to use the new repository pattern and DTOs. For example, the employee creation route now looks like this:
+
+   ```typescript:src/app/api/employee/route.ts
+	import { NextRequest } from "next/server";
+	import { PrismaClient } from "@prisma/client";
+	import { z } from 'zod';
+	import { EmployeeRepository } from '@/repositories/employeeRepository';
+	import { CreateEmployeeDTO } from '@/dtos/employeeDTO';
+	import { EmployeeResponseDTO } from '@/dtos/responseDTO';
+	import { createEmployeeSchema } from '@/schemas/employeeSchema';
+	import { logger } from '@/utils/logger';
+
+	export const dynamic = "force-dynamic";
+
+	// Singleton pattern for PrismaClient to avoid multiple instances
+	const prisma = new PrismaClient();
+	const employeeRepository = new EmployeeRepository(prisma);
+
+	export type ICreateResponseProperties = EmployeeResponseDTO & { status: number, statusText: string };
+
+	const createResponse = ({
+		success = false,
+		message = "",
+		data = {} as EmployeeResponseDTO["data"],
+		status = 200,
+		statusText = "OK"
+	}: ICreateResponseProperties): Response => {
+		const responseObject: EmployeeResponseDTO = { success, message, data };
+		return new Response(JSON.stringify(responseObject), {
+			status,
+			headers: {
+				"Content-Type": "application/json",
+				"Access-Control-Allow-Origin": "*", // Consider restricting this for security
+			},
+			statusText,
+		});
+	};
+
+	export async function POST(request: NextRequest) {
+		try {
+			const body: CreateEmployeeDTO = await request.json();
+			const validatedData = createEmployeeSchema.parse(body);
+			const createdEmployee = await employeeRepository.createEmployee(validatedData);
+			logger.info(`Employee created: ${createdEmployee.id}`);
+			return createResponse({ success: true, message: "Success", data: createdEmployee, status: 201, statusText: "CREATED" });
+		} catch (e: any) {
+			const errorResponse = {
+				success: false,
+				message: e?.message || "Something went wrong",
+				status: 500,
+				statusText: "Internal Server Error",
+			} as ICreateResponseProperties;
+			if (e instanceof z.ZodError) {
+				errorResponse.message = e.errors.map(err => `${err.path}: ${err.message}`).join(', ');
+				errorResponse.status = 400;
+				errorResponse.statusText = "Bad Request";
+				logger.error(`Error creating employee: ${errorResponse.message}`);
+				return createResponse(errorResponse);
+			}
+			logger.error(`Error creating employee: ${errorResponse.message}`);
+			return createResponse(errorResponse);
+		}
+	}
+
+   ```
+
+   This refactoring enhances error handling and implements logging in API routes.
+
+### Usage
+
+1. **Prisma Schema Definition:**
    - **Department Model:** Contains fields for department ID, unique key, label, and timestamps. It relates to multiple employees and department history records.
    - **Employee Model:** Includes fields for employee ID, unique public ID, first and last names, hire date, department association, phone, address, and timestamps.
    - **Employee Department History Model:** Tracks the history of employees' department assignments, with fields for employee ID, department key, department label, and timestamps.
@@ -43,11 +221,25 @@ The Simple Employee Maintenance web application is designed to streamline the ma
    - **Database:** Prisma ORM with SQLite for development database environment.
    - **Other Tools:** Git for version control, GitHub for repository hosting, vercel for deployments.
 
-### Usage
+3. **Instructions::**
+   - **Database Setup:** Create the necessary tables and relationships using Prisma migrations.
+   - **API Development:** Implement the required endpoints to interact with the employee and department data.
+   - **UI Implementation:** Develop the Employee List page to display and manage employee records effectively.
 
-- **Database Setup:** Create the necessary tables and relationships using Prisma migrations.
-- **API Development:** Implement the required endpoints to interact with the employee and department data.
-- **UI Implementation:** Develop the Employee List page to display and manage employee records effectively.
+4. **Deliverables:**
+   - **API Development:** The required endpoints have been implemented using the repository pattern and DTOs. Examples include:
+     - CreateEmployee
+     - UpdateEmployee
+     - UpdateEmployeeDepartment
+     - GetAllEmployees
+     - GetEmployeeById
+     - DeleteEmployee
+     - GetAllDepartments
+   - **UI Implementation:** 
+     The Employee List page has been developed to display and manage employee records effectively, including features like viewing employee details and updating department assignments.
+
+> The Simple Employee Maintenance web application now incorporates the repository pattern, DTOs, and improved error handling, resulting in a more maintainable and robust solution for managing employee records and departmental assignments.
+>
 
 ### Conclusion
 
@@ -58,22 +250,18 @@ The Simple Employee Maintenance web application is a comprehensive solution for 
 ## STARTING POINT
 
 ```bash
-
 npm i --force
-
 npm i --legacy-peer-deps
 
 npm i -D jest @types/jest @testing-library/jest-dom ts-jest @testing-library/user-event jest-environment-jsdom @testing-library/react --force
 
+npx prisma generate
 npm run build
-
 npm run test
-
 npm run start
-
 ```
 
-## README
+## ASSESSMENT README
 
 A simple web application for managing employee records, built as a fullstack assessment to demonstrate proficiency in software architecture, code quality, design patterns, and best practices.
 
@@ -147,57 +335,20 @@ Create a new Prisma schema file (typically named `schema.prisma`) and define the
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-    provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "sqlite"
-    url      = env("DATABASE_URL")
 }
 
 // npx prisma migrate dev
 
 model Department {
-    id                        Int                         @id @default(autoincrement())
-    key                       String                      @unique
-    label                     String
-    Employee                  Employee[]
-    EmployeeDepartmentHistory EmployeeDepartmentHistory[]
-    createdAt                 DateTime                    @default(now())
-    updatedAt                 DateTime                    @default(now())
-
-    // @@map("departments")
 }
 
 model Employee {
-    id                        Int                         @id @default(autoincrement())
-    publicId                  String                      @unique @default(uuid())
-    firstName                 String
-    lastName                  String
-    hireDate                  DateTime?                   @default(now())
-    isActive                  Boolean
-    department                Department?                 @relation(fields: [departmentKey], references: [key])
-    departmentKey             String?
-    phone                     String
-    address                   String
-    EmployeeDepartmentHistory EmployeeDepartmentHistory[]
-    createdAt                 DateTime                    @default(now())
-    updatedAt                 DateTime                    @default(now())
-
-    // @@map("employees")
 }
 
 model EmployeeDepartmentHistory {
-    id              Int        @id @default(autoincrement())
-    employee        Employee   @relation(fields: [employeeId], references: [id])
-    employeeId      Int
-    department      Department @relation(fields: [departmentKey], references: [key])
-    departmentKey   String
-    departmentLabel String     @default("")
-    createdAt       DateTime   @default(now())
-    updatedAt       DateTime   @default(now())
-
-    // @@map("employee_department_history")
 }
 
 ```
@@ -234,4 +385,5 @@ npx prisma migrate dev --name init
 npx prisma migrate up --experimental
 ```
 
-These commands will create and apply migrations to your database based on the schema you've defined.
+> These commands will create and apply migrations to your database based on the schema you've defined.
+>
