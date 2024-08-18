@@ -1,32 +1,33 @@
-'use server';
 import { NextRequest } from "next/server";
-import { PrismaClient, Department, Employee } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { z } from 'zod';
 import { EmployeeRepository } from '@/repositories/employeeRepository';
 import { CreateEmployeeDTO } from '@/dtos/employeeDTO';
+import { EmployeeResponseDTO } from '@/dtos/responseDTO';
+import { createEmployeeSchema } from '@/schemas/employeeSchema';
+import { logger } from '@/utils/logger';
 
+export const dynamic = "force-dynamic";
+
+// Singleton pattern for PrismaClient to avoid multiple instances
 const prisma = new PrismaClient();
 const employeeRepository = new EmployeeRepository(prisma);
 
-export interface CreateEmployeeDAO extends Employee {
-	department: Department | null
-}
+export type ICreateResponseProperties = EmployeeResponseDTO & { status: number, statusText: string };
 
-export type CreateEmployeeRequestDAO = Omit<Omit<Omit<Omit<Omit<CreateEmployeeDAO, 'department'>, 'updatedAt'>, 'createdAt'>, 'publicId'>, 'id'>;
-
-export interface CreateEmployeeResponse {
-	success: boolean;
-	message: string;
-	data: CreateEmployeeDAO;
-}
-
-// Define a reusable function for creating error responses
-const createErrorResponse = (message: string, status: number, statusText: string) => {
-	return new Response(JSON.stringify({ success: false, message, data: {} }), {
+const createResponse = ({
+	success = false,
+	message = "",
+	data = {} as EmployeeResponseDTO["data"],
+	status = 200,
+	statusText = "OK"
+}: ICreateResponseProperties): Response => {
+	const responseObject: EmployeeResponseDTO = { success, message, data };
+	return new Response(JSON.stringify(responseObject), {
 		status,
 		headers: {
 			"Content-Type": "application/json",
-			"Access-Control-Allow-Origin": "*",
+			"Access-Control-Allow-Origin": "*", // Consider restricting this for security
 		},
 		statusText,
 	});
@@ -34,54 +35,26 @@ const createErrorResponse = (message: string, status: number, statusText: string
 
 export async function POST(request: NextRequest) {
 	try {
-		const body: CreateEmployeeRequestDAO = await request.json();
-
-		const createSchema = z.object({
-			firstName: z.string().min(1),
-			lastName: z.string().min(1),
-			hireDate: z.string().nullable(),
-			isActive: z.boolean(),
-			departmentKey: z.string().min(1),
-			phone: z.string().min(1),
-			address: z.string().max(64)
-		});
-
-		const validatedData = createSchema.parse(body);
-
-		const createdEmployee = await prisma.employee.create({
-			data: validatedData,
-			include: {
-				department: true,
-				EmployeeDepartmentHistory: true
-			}
-		});
-
-		if (validatedData.departmentKey) {
-			await prisma.employeeDepartmentHistory.create({
-				data: {
-					employeeId: createdEmployee.id,
-					departmentKey: validatedData.departmentKey,
-					departmentLabel: createdEmployee.department?.label || "",
-				}
-			});
-		}
-
-		return new Response(JSON.stringify({
-			success: true,
-			message: "Success",
-			data: createdEmployee
-		}), {
-			status: 201,
-			headers: {
-				"Content-Type": "application/json",
-				"Access-Control-Allow-Origin": "*",
-			},
-			statusText: "CREATED",
-		});
+		const body: CreateEmployeeDTO = await request.json();
+		const validatedData = createEmployeeSchema.parse(body);
+		const createdEmployee = await employeeRepository.createEmployee(validatedData);
+		logger.info(`Employee created: ${createdEmployee.id}`);
+		return createResponse({ success: true, message: "Success", data: createdEmployee, status: 201, statusText: "CREATED" });
 	} catch (e: any) {
+		const errorResponse = {
+			success: false,
+			message: e?.message || "Something went wrong",
+			status: 500,
+			statusText: "Internal Server Error",
+		} as ICreateResponseProperties;
 		if (e instanceof z.ZodError) {
-			return createErrorResponse(e.errors.map(err => `${err.path}: ${err.message}`).join(', '), 400, "Bad Request");
+			errorResponse.message = e.errors.map(err => `${err.path}: ${err.message}`).join(', ');
+			errorResponse.status = 400;
+			errorResponse.statusText = "Bad Request";
+			logger.error(`Error creating employee: ${errorResponse.message}`);
+			return createResponse(errorResponse);
 		}
-		return createErrorResponse(e?.message || "Something went wrong", 500, "Internal Server Error");
+		logger.error(`Error creating employee: ${errorResponse.message}`);
+		return createResponse(errorResponse);
 	}
 }

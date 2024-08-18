@@ -1,3 +1,4 @@
+import { CreateEmployeeSchema, UpdateEmployeeSchema } from "@/schemas/employeeSchema";
 import { Department, Employee, EmployeeDepartmentHistory } from "@prisma/client";
 
 export interface EmployeeDTO extends Employee {
@@ -5,26 +6,10 @@ export interface EmployeeDTO extends Employee {
 	EmployeeDepartmentHistory: EmployeeDepartmentHistory[];
 }
 
-export interface CreateEmployeeDTO {
-	firstName: string;
-	lastName: string;
-	hireDate: string | null;
-	isActive: boolean;
-	departmentKey: string;
-	phone: string;
-	address: string;
-}
+export type CreateEmployeeDTO = CreateEmployeeSchema;
 
-export interface UpdateEmployeeDTO {
-	publicId: string;
-	firstName?: string;
-	lastName?: string;
-	hireDate?: string;
-	isActive?: boolean;
-	departmentKey?: string;
-	phone?: string;
-	address?: string;
-}
+
+export type UpdateEmployeeDTO = UpdateEmployeeSchema;
 
 export interface UpdateEmployeeActiveStatusDTO {
 	publicId: string;

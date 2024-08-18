@@ -1,4 +1,4 @@
-import { PrismaClient, Employee, Department } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { CreateEmployeeDTO, EmployeeDTO } from '@/dtos/employeeDTO';
 
 export class EmployeeRepository {

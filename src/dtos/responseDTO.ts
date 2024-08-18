@@ -7,7 +7,7 @@ export interface BaseResponseDTO<T> {
 	data: T;
 }
 
-export interface EmployeeResponseDTO extends BaseResponseDTO<EmployeeDTO> { }
+export type EmployeeResponseDTO = BaseResponseDTO<EmployeeDTO>;
 
 export interface EmployeesListResponseDTO extends BaseResponseDTO<EmployeeDTO[]> { }
 
