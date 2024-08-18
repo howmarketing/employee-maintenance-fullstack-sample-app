@@ -1,18 +1,21 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+// Define the Prisma client generator
 generator client {
     provider = "prisma-client-js"
 }
 
+// Define the database connection
 datasource db {
     provider  = "postgresql"
     url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
     directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
-// npx prisma migrate dev
+// Command to run migrations: npx prisma migrate dev
 
+// Department model
 model Department {
     id                        Int                         @id @default(autoincrement())
     key                       String                      @unique
@@ -25,6 +28,7 @@ model Department {
     @@map("departments")
 }
 
+// Employee model
 model Employee {
     id                        Int                         @id @default(autoincrement())
     publicId                  String                      @unique @default(uuid()) @map("public_id")
@@ -43,6 +47,7 @@ model Employee {
     @@map("employees")
 }
 
+// EmployeeDepartmentHistory model
 model EmployeeDepartmentHistory {
     id              Int        @id @default(autoincrement())
     employee        Employee   @relation(fields: [employeeId], references: [id])
